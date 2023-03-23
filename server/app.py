@@ -39,7 +39,7 @@ def restaurant_by_id(id):
     
     if request.method == 'GET':
     
-        restaurant = Restaurant.query.filter_by(id == id).first()
+        restaurant = Restaurant.query.filter_by(id = id).first()
         restaurant_dict = restaurant.to_dict()
 
         if restaurant:

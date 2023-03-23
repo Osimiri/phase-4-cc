@@ -11,7 +11,7 @@ metadata = MetaData(naming_convention={
 db = SQLAlchemy(metadata=metadata)
 
 # Add models here
-class Pizza(db.model, SerializerMixin):
+class Pizza(db.Model, SerializerMixin):
     __tablename__ = 'pizzas'
 
     serialize_rules = ('-restaurant_pizzas', '-restaurants.pizzas', '-created_at', '-updated_at')
@@ -23,10 +23,10 @@ class Pizza(db.model, SerializerMixin):
     updated_at = db.Column(db.DateTime, onupdate = db.func.now())
 
     restaurant_pizzas = db.relationship('RestaurantPizza', backref = 'pizza')
-    restaurants = association_proxy(restaurant_pizzas, 'restaurant')
+    # restaurants = association_proxy(restaurant_pizzas, 'restaurant')
 
 
-class Restaurant(db.model, SerializerMixin):
+class Restaurant(db.Model, SerializerMixin):
     __tablename__ = 'restaurants'
 
     serialize_rules = ('-restaurant_pizzas', '-created_at', '-updated_at')
@@ -36,9 +36,9 @@ class Restaurant(db.model, SerializerMixin):
     address = db.Column(db.String)
 
     restaurant_pizzas = db.relationship('RestaurantPizza', backref = 'restaurant')
-    pizzas = association_proxy('restaurant_pizzas', 'pizza')
+    # pizzas = association_proxy('restaurant_pizzas', 'pizza')
 
-class RestaurantPizza(db.model, SerializerMixin):
+class RestaurantPizza(db.Model, SerializerMixin):
     __tablename__ = 'restaurant_pizzas'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -51,7 +51,7 @@ class RestaurantPizza(db.model, SerializerMixin):
 
     @validates('price')
     def validate_price(self,key,value):
-        if value and 1 < value < 30:
+        if value and 1 <= value <= 30:
             return value 
-        raise ValueError('Must have a price between 1 and 30 bozo')
+        raise ValueError('must have a price between 1 and 30')
 
